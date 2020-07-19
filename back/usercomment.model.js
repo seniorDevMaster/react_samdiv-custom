@@ -23,6 +23,9 @@ const fields = {
   },
   content: {
     type: String
+  },
+  commentDate: {
+    type: String
   }
 }
 
