@@ -1,58 +1,59 @@
-const Blog = require('../blog.model')
+// const Blog = require('../blog.model')
+const Comment = require('../comment.model')
+const UserComment = require('../usercomment.model');
 
-// The callback that is invoked when the user submits the form on the client.
-exports.collectBlog = (req, res) => {
-  const { blogId } = req.body
-  const title = 'title'
-  const description = 'description'
-  const image = 'image'
-  const categories = 'updateTitle'
+exports.setComment = (req, res) => {
+  console.log('----------', req.body)
+  const { comment } = req.body
+  const results = {}
 
-  Blog.findOne({ blogId })
-    .then(blog => {
-      if (blog==null) {
-        console.log('blog: ', blog)
-        Blog.create({ blogId, title, description, image, categories })
-        .then(() => res.json())
-        .catch(err => console.log('create err ===========', err))
-      } else {
-        console.log('blog: ', blog)
-        Blog.findByIdAndUpdate(blog._id, { categories })
-          .then(() => res.json())
-          .catch(err => console.log('update err ===========', err))
-      }
-    })
-    .catch(err => console.log('error ================', err))
+  UserComment.create(comment, function(err, res) {
+    if (err) throw err;
+  });
 }
 
-// The callback that is invoked when the user visits the confirmation
-// url on the client and a fetch request is sent in componentDidMount.
-// exports.confirmEmail = (req, res) => {
-//   const { id } = req.params
+exports.getBlogAndComment = (req, res) => {
+  const { blogId } = req.body
+  const results = {}
 
-//   User.findById(id)
-//     .then(user => {
+  Comment.find().where("_id", blogId).exec(function(err, blogs)
+  {
+    results.blogData = blogs
+    UserComment.find().where("_id", blogId).exec(function(err, comment)
+    {
+      results.commentData = comment
+      res.json(results);
+    });
+  });
+}
 
-//       // A user with that id does not exist in the DB. Perhaps some tricky
-//       // user tried to go to a different url than the one provided in the
-//       // confirmation email.
-//       if (!user) {
-//         res.json({ msg: msgs.couldNotFind })
-//       }
+exports.saveBlog = (req, res) => {
+  const comments  = req.body;
+  
+  const commenttitle = comments.title;
+  const commentdescription = comments.commentDes;
+  const commentimage = comments.commentImage;
+  const curDate = comments.curDate;
+  const categories = 'updateTitle';
+  Comment.findOne({ commenttitle })
+    .then(content => {
+      if (content==null) {
+        Comment.create({ commenttitle, commentdescription, commentimage, categories, curDate })
+        .then(() => res.json())
+        .catch(err => console.log('create err ------------------', err))
+      } else {
+        Comment.findByIdAndUpdate(content._id, { commenttitle, commentdescription, commentimage, curDate})
+          .then(() => res.json())
+          .catch(err => console.log('update err ------------------', err))
+      }
+    })
+    .catch(err => console.log('error ------------------', err))
+}
 
-//       // The user exists but has not been confirmed. We need to confirm this
-//       // user and let them know their email address has been confirmed.
-//       else if (user && !user.confirmed) {
-//         User.findByIdAndUpdate(id, { confirmed: true })
-//           .then(() => res.json({ msg: msgs.confirmed }))
-//           .catch(err => console.log(err))
-//       }
+exports.getBlog = (req, res) => {
+ 
+  Comment.find({}, function(err, result){
+    res.json(result);
+  });
 
-//       // The user has already confirmed this email address.
-//       else  {
-//         res.json({ msg: msgs.alreadyConfirmed })
-//       }
-
-//     })
-//     .catch(err => console.log(err))
-// }
+}

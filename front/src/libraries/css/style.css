@@ -537,3 +537,27 @@ a {
         height: 17px;
     }
 }
+
+.single-post h3 {
+    font-family: 'Lato',sans-serif;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #3D4251;
+    line-height: 1.2em;
+    margin: 1.5em 0 0.5em;
+}
+.single-post p {
+    font-family: 'Lora',serif;
+    font-size: 1em;
+    line-height: 1.8em;
+    color: #3D4251;
+}
+.single-post img {
+    display: block;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    margin: auto;
+    max-width: 100%;
+    height: auto !important;
+}

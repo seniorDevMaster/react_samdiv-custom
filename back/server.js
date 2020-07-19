@@ -29,24 +29,19 @@ app.use(function(req, res, next) {
   next();
 });
 
-// app.use(cors())
-
-// Set up routes for static resources
-// app.use('/', express.static(__dirname + '/public'));
-// app.use('/room', express.static(__dirname + '/public'));
-// app.use('/login', express.static(__dirname + '/public'));
-// app.use('/conference', express.static(__dirname + '/public'));
-// app.use('/js', express.static(__dirname + '/public/js'));
-// app.use('/static', express.static(__dirname + '/public/static'));
-// app.use('/static/css', express.static(__dirname + '/public/static/css'));
-// app.use('/static/js', express.static(__dirname + '/public/static/js'));
-// app.use('/static/media', express.static(__dirname + '/public/static/media'));
 // Allow the app to accept JSON on req.body
 app.use(express.json())
 
-// This is the endpoint that is hit from the onSubmit handler in Landing.js
-// The callback is shelled off to a controller file to keep this file light.
-app.post('/blog', blogController.collectBlog)
+// Handle Comment
+app.post('/saveComment', blogController.setComment)
+app.post('/getBlogAndComment', blogController.getBlogAndComment)
+// app.post('/reply', blogController.collectUserComment)
+
+// Handle Admin
+app.get('/bloglist/get', blogController.getBlog)
+app.post('/admin/save', blogController.saveBlog)
+
+
 // Catch all to handle all other requests that come into the app.
 app.use('*', (req, res) => {
   res.status(404).json({ msg: 'Not Found' })
