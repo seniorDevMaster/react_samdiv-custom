@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 // Data we need to collect/confirm to have the app go.
 const fields = {
-  blodId: {
+  blogId: {
     type: String
   },
   parentId: {
@@ -25,6 +25,9 @@ const fields = {
     type: String
   },
   commentDate: {
+    type: String
+  },
+  parentCommentDate: {
     type: String
   }
 }
