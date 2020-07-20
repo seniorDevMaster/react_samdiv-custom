@@ -1,5 +1,6 @@
 import React, {Component, useEffect, useState} from 'react';
 import { useDispatch } from 'react-redux';
+import Config from '../../config.json';
 
 import Articles from '../../data/articles';
 import PageTitle from '../common/page.title';
@@ -10,12 +11,8 @@ function BlogList(props) {
 const [fetchdata, setFetchData] = useState({})
 const dispatch = useDispatch();
 
-const API_URL = process.env.NODE_ENV === 'production'
-  ? 'https://samdivtech.com'
-  : 'http://localhost:3111'
-  
   useEffect(()=>{
-    fetch(`${API_URL}/bloglist/get`, {
+    fetch(`${Config.serverapi}/bloglist/get`, {
       method: 'Get',
       headers: {
           accept: 'application/json',

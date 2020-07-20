@@ -1,16 +1,14 @@
-import React, { useEffect, useState }  from "react";
+import React, { useEffect, useState } from "react";
+import ReactQuill from "react-quill";
 import Config from '../../config.json';
 
+import "react-quill/dist/quill.snow.css";
 import './admin.css';
-function Confirm(props) {
 
-    const [checked, setChecked] = React.useState(true);
+function BlogList (props) {
+  const [checked, setChecked] = React.useState(true);
     const [userData, setUserData] = useState();
 
-    const API_URL = process.env.NODE_ENV === 'production'
-    ? 'https://samdivtech.com'
-    : 'http://localhost:3111'
-    
     useEffect(() => {
         fetch(`${Config.serverapi}/getBlogAndComment`, {
         method: 'post',
@@ -84,4 +82,5 @@ function Confirm(props) {
     );
 }
 
-export default Confirm;
+
+export default BlogList;

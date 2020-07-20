@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
 import {Link} from 'react-router-dom';
+import Config from '../../config.json';
 
 import PageTitle from '../common/page.title';
 import { JwModal } from '../dialog';
@@ -8,16 +9,13 @@ import Login from '../dialog/login'
 import CommentForm from '../comment/comment-form'
 
 import './blog.single.css';
+import { func } from 'prop-types';
 
 function SinglePost(props) {
   const socialAuth = useSelector(state=>state.auths)
-
   const [ blogContent, setBlogContent ] = useState();
   const [ commentContent, setCommentContent ] = useState();
-
-  const API_URL = process.env.NODE_ENV === 'production'
-      ? 'https://samdivtech.com'
-      : 'http://localhost:3111'
+  var comments = []
 
   useEffect(()=>{
     getBlogAndCommentDataFromServer()
@@ -26,8 +24,8 @@ function SinglePost(props) {
   const goBack = () => {
     props.history.goBack()
   }
-  const getBlogAndCommentDataFromServer = () =>{
-    fetch(`${API_URL}/getBlogAndComment`, {
+  function getBlogAndCommentDataFromServer() {
+    fetch(`${Config.serverapi}/getBlogAndComment`, {
       method: 'post',
       headers: {
           accept: 'application/json',
@@ -40,12 +38,18 @@ function SinglePost(props) {
     )
     .then(data => {
       setBlogContent(data.blogData)
-      setCommentContent(data.commentData)
+
+      comments = []
+      for(let i=0; i< data.commentData.length; i++) {
+        getCommentSequenceData(data.commentData[i])
+      }
+      console.log('getBlogAndCommentDataFromServer---------', comments)
+      setCommentContent(comments)
     })
     .catch(err => console.log(err))
   }
   const setCommentDataToServer = (comment) =>{
-    fetch(`${API_URL}/saveComment`, {
+    fetch(`${Config.serverapi}/saveComment`, {
       method: 'post',
       headers: {
           accept: 'application/json',
@@ -57,7 +61,13 @@ function SinglePost(props) {
       res.json()
     )
     .then(data => {
-      setCommentContent(data.commentData)
+      comments = []
+      for(let i=0; i< data.commentData.length; i++) {
+        getCommentSequenceData(data.commentData[i])
+      }
+      console.log('setCommentDataToServer---------', comments)
+
+      setCommentContent(comments)
     })
     .catch(err => console.log(err))
   }
@@ -73,8 +83,7 @@ function SinglePost(props) {
     })
     const comment = {
       blogId: blogContent[0]._id,
-      parentId: socialAuth.profile.id,
-      childId: '',
+      parentId: 0,
       userName: socialAuth.profile.name,
       avatarUrl: socialAuth.profile.profilePicURL,
       email: socialAuth.profile.email,
@@ -85,11 +94,7 @@ function SinglePost(props) {
     setCommentDataToServer(comment)
   }
 
-  const handleCommentReply = (id) => {
-    document.getElementById(id).style.display = 'inline-block'
-  }
-
-  const handleCommentPost = (id, parentId, parentCommentDate) => {
+  const handleCommentPost = (id, selfId) => {
     var today = new Date().toLocaleDateString(undefined, {
       day: '2-digit',
       month: '2-digit',
@@ -100,153 +105,80 @@ function SinglePost(props) {
     })
     const comment = {
       blogId: blogContent[0]._id,
-      parentId: parentId,
-      childId: socialAuth.profile.id,
+      parentId: selfId,
       userName: socialAuth.profile.name,
       avatarUrl: socialAuth.profile.profilePicURL,
       email: socialAuth.profile.email,
       content: document.getElementById(id).childNodes[0].value,
       commentDate: today,
-      parentCommentDate: parentCommentDate 
+      parentKey: id,
     };
 
     setCommentDataToServer(comment)
     document.getElementById(id).style.display = 'none'
+    document.getElementById(id).childNodes[0].value = ''
   }
-
+  const handleCommentReply = (id) => {
+    document.getElementById(id).style.display = 'inline-block'
+  }
   const handleCommentCancel = (id, parentId) => {
     document.getElementById(id).style.display = 'none'
   }
-  
-  const commentNode = Array.isArray(commentContent) ? 
-    commentContent.map((comment, index)=>{
-      return (
-        <div className="CommentLevel top" key={comment.childId}>
-          <div className="Comment">
-            <div className="Avatar" style={{backgroundImage: `url(${comment.avatarUrl})`, borderRadius: '20px', width: '40px', height: '40px'}}>
-            </div>
-            <div className="right">
-              <div className="top">
-                <p> {comment.userName} </p>
-              </div>
-              <div className="message">
-                <p> {comment.content} </p>
-              </div>
-              <div className="bottom">
-                <div className="left">
-                  <span className="date desktopOnly">{comment.commentDate}</span>
-                  { socialAuth.auth ? 
-                  <button className="reply" onClick={() => handleCommentReply(comment._id)}> Reply</button>
-                  : null }
-                </div>
-              </div>
-              { socialAuth.auth ?
-              <div id={comment._id} className="" style={{display:'none', width: '100%'}}>
-                <textarea className="commentTextarea" placeholder="Comment:" ></textarea>
-                <button className="reply" onClick={() => handleCommentPost(comment._id, comment.parentId, comment.commentData)}> Post</button>
-                <button className="reply" onClick={() => handleCommentCancel(comment._id)}> Cancel</button>
-              </div>
-              : null }
-            </div>
-          </div>
-        </div>
-      )
-    }) : null
 
-    // function getCommentSequenceData() {
-    //   if (commentContent.length < 1) return
-    //   for (var i=0; i<commentContent.length; i++) {
-    //     <div className="CommentLevel top" key={comment.childId}>
-    //       <div className="Comment">
-    //         <div className="Avatar" style={{backgroundImage: `url(${comment.avatarUrl})`, borderRadius: '20px', width: '40px', height: '40px'}}>
-    //         </div>
-    //         <div className="right">
-    //           <div className="top">
-    //             <p> {comment.userName} </p>
-    //           </div>
-    //           <div className="message">
-    //             <p> {comment.content} </p>
-    //           </div>
-    //           <div className="bottom">
-    //             <div className="left">
-    //               <span className="date desktopOnly">{comment.commentDate}</span>
-    //               <button className="reply" onClick={() => handleCommentReply(comment._id)}> Reply</button>
-    //             </div>
-    //           </div>
-    //           <div id={comment._id} className="" style={{display:'none', width: '100%'}}>
-    //             <textarea className="commentTextarea" placeholder="Comment:" ></textarea>
-    //             <button className="reply" onClick={() => handleCommentPost(comment._id, comment.parentId, comment.commentData)}> Post</button>
-    //             <button className="reply" onClick={() => handleCommentCancel(comment._id)}> Cancel</button>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   }
-    // }
-    const commentNew =    
-      <div className="read" >
-          <button className="Button primary big" onClick={JwModal.open('auth-modal')} >
-              Comment Now
-          </button>
-          {commentNode}
-      </div>
-      {/* <div className="CommentLevel">
+  function getCommentSequenceData(commentData, padding = 0) {
+      commentData.padding = padding
+      comments.push(commentData)
+
+      if (commentData.children.length > 0) {
+        for(let i = 0; i < commentData.children.length; i ++) {
+          getCommentSequenceData(commentData.children[i], padding+50)
+        }
+      }
+  }
+
+  const commentNode = Array.isArray(commentContent) ? 
+    commentContent.map((comment)=>{
+    return (
+      <div className="CommentLevel top" key={comment.childId} style={{ paddingLeft: comment.padding }}>
         <div className="Comment">
-          <div id="comment-622" className="anchor"></div>
-          <div className="">
-            <a href="/profile/appservice" target="_blank" className="">
-              <div className=" Avatar" style="background-image: url(&quot;https://res.cloudinary.com/dyd911kmh/image/fetch/t_avatar_thumbnail/https://cdn.datacamp.com/community/assets/placeholder_avatar-7f673b5d40e159404a56b5931250cc73.png&quot;); border-radius: 20px; min-width: 40px; min-height: 40px;"></div>
-            </a>
+          <div className="Avatar" style={{backgroundImage: `url(${comment.avatarUrl})`, borderRadius: '20px', width: '40px', height: '40px'}}>
           </div>
           <div className="right">
             <div className="top">
-              <div className="">
-                <a href="/profile/appservice" target="_blank" className="username">Phil Smithens</a>
-              </div>
-              <div className="more"></div>
+              <p> {comment.userName} </p>
             </div>
-            <span className="date mobileOnly">11/04/2018 06:25 AM</span>
             <div className="message">
-              <p>yes, &nbsp;Yahoo disabled it . The fix is explained in the tutorial.</p>
+              <p> {comment.content} </p>
             </div>
             <div className="bottom">
               <div className="left">
-                <span className="date desktopOnly">11/04/2018 06:25 AM</span>
+                <span className="date desktopOnly">{comment.commentDate}</span>
+                { socialAuth.auth ? 
+                <button className="reply" onClick={() => handleCommentReply(comment._id)}> Reply</button>
+                : null }
               </div>
             </div>
+            { socialAuth.auth ?
+            <div id={comment._id} className="" style={{display:'none', width: '100%'}}>
+              <textarea className="commentTextarea" placeholder="Comment:" ></textarea>
+              <button className="reply" onClick={() => handleCommentPost(comment._id, comment.selfId)}> Post</button>
+              <button className="reply" onClick={() => handleCommentCancel(comment._id)}> Cancel</button>
+            </div>
+            : null }
           </div>
         </div>
-        <div className="CommentLevel">
-          <div className="Comment">
-            <div id="comment-2927" className="anchor"></div>
-            <div className="">
-              <a href="/profile/mohamedegabass2" target="_blank" className="">
-                <div className=" Avatar" style="background-image: url(&quot;https://res.cloudinary.com/dyd911kmh/image/fetch/t_avatar_thumbnail/https://assets.datacamp.com/users/avatars/003/002/951/square?1549238738&quot;); border-radius: 20px; min-width: 40px; min-height: 40px;"></div>
-              </a>
-            </div>
-            <div className="right">
-              <div className="top">
-                <div className="">
-                  <a href="/profile/mohamedegabass2" target="_blank" className="username">Mohamed Abass</a>
-                </div>
-                <div className="more"></div>
-              </div>
-              <span className="date mobileOnly">19/11/2018 02:15 PM</span>
-              <div className="message">
-                <p>Hi&nbsp;</p>
-                <p>I have CSV format , but i fail when imort it into python 2.7 , could you help me ?</p>
-                <p>Thanks in advance</p>
-              </div>
-              <div className="bottom">
-                <div className="left">
-                  <span className="date desktopOnly">19/11/2018 02:15 PM</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
+      </div>
+    )
+  }) : null
+  
+  const commentNew =    
+    <div className="read" >
+        <button className="Button primary big" onClick={JwModal.open('auth-modal')} >
+            Comment Now
+        </button>
+        {commentNode}
+    </div>
+   
   return (
     <div className="main-content">
       <PageTitle title="Blog Details" bgimg="/images/bg/services.jpg"/>

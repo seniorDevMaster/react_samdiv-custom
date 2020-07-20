@@ -39,7 +39,7 @@ app.post('/getBlogAndComment', blogController.getBlogAndComment)
 
 // Handle Admin
 app.get('/bloglist/get', blogController.getBlog)
-app.post('/admin/save', blogController.saveBlog)
+app.post('/insertBlog', blogController.insertBlog)
 
 
 // Catch all to handle all other requests that come into the app.

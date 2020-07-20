@@ -694,18 +694,6 @@ a {
     padding-left: 20px;
 }
 
-@media (min-width: 800px) {
-  .CommentLevel.jsx-355375240 {
-      margin-bottom: 15px;
-      margin-top: 30px;
-      padding-left: 55px;
-  }
-}
-.CommentLevel.jsx-355375240 {
-    margin-top: 15px;
-    padding-left: 20px;
-}
-
 .Comment {
   display: flex;
   flex-direction: row;

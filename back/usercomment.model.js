@@ -6,11 +6,11 @@ const fields = {
   blogId: {
     type: String
   },
-  parentId: {
-    type: String
+  selfId: {
+    type: Number
   },
-  childId: {
-    type: String
+  parentId: {
+    type: Number
   },
   userName: {
     type: String
@@ -25,9 +25,6 @@ const fields = {
     type: String
   },
   commentDate: {
-    type: String
-  },
-  parentCommentDate: {
     type: String
   }
 }

@@ -1,9 +1,6 @@
 import React from "react";
-import { Switch, Route, Router } from 'react-router-dom'
 
 import Itemlist from './adminlist';
-import Comment from './comment';
-import Confirm from './confirm';
 import Routeurl from './router';
 
 class AdminPage extends React.Component{
@@ -13,7 +10,6 @@ class AdminPage extends React.Component{
             <div style={{ display: 'flex' }}>
                 <div>
                     <Itemlist />
-
                 </div>
             
                 <div style={{    
