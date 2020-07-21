@@ -3,13 +3,13 @@ const Schema = mongoose.Schema
 
 // Data we need to collect/confirm to have the app go.
 const fields = {
-  commenttitle: {
+  blogTitle: {
     type: String
   },
-  commentdescription: {
+  blogDescription: {
     type: String
   },
-  commentimage: {
+  blogImage: {
     type: String
   },
   categories: {
@@ -21,6 +21,6 @@ const fields = {
 }
 
 // One nice, clean line to create the Schema.
-const commentSchema = new Schema(fields)
+const blogSchema = new Schema(fields)
 
-module.exports = mongoose.model('comment', commentSchema)
+module.exports = mongoose.model('blog', blogSchema)

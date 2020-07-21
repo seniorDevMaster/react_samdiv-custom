@@ -12,8 +12,8 @@ const [fetchdata, setFetchData] = useState({})
 const dispatch = useDispatch();
 
   useEffect(()=>{
-    fetch(`${Config.serverapi}/bloglist/get`, {
-      method: 'Get',
+    fetch(`${Config.serverapi}/getBlogList`, {
+      method: 'post',
       headers: {
           accept: 'application/json',
           'content-type': 'application/json'
@@ -28,22 +28,22 @@ const dispatch = useDispatch();
     .catch(err => console.log(err))
   },[])
   
-  let comments = fetchdata;
+  let blogs = fetchdata;
 
-  const list = Array.isArray(comments) ? 
-    comments.map((comment, index)=>{
+  const list = Array.isArray(blogs) ? 
+    blogs.map((blog, index)=>{
       return (
-        <article className="post clearfix mb-10" key={comment._id} >
-          <Link to={`/post/${comment._id}`}>
+        <article className="post clearfix mb-10" key={blog._id} >
+          <Link to={`/post/${blog._id}`}>
             <div className="NewsCard">
               <div className="contentBlock">
                 <h2 className="blue">
-                  <div dangerouslySetInnerHTML={{ __html: comment.commenttitle }} />
+                  <div dangerouslySetInnerHTML={{ __html: blog.blogTitle }} />
                 </h2>
                 <div className="detailsBlock">
                   <div className="details">
                     <span className="date">
-                      { comment.curDate }
+                      { blog.curDate }
                     </span>
                   </div>
                 </div>

@@ -26,6 +26,9 @@ const fields = {
   },
   commentDate: {
     type: String
+  },
+  commentAllow: {
+    type: Boolean
   }
 }
 

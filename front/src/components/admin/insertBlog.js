@@ -48,10 +48,6 @@ class InsertBlog extends React.Component {
       second: '2-digit'
     })
     let value = this.state.contentHTML;
- 
-    console.log(commentTitle.toString(),"value")
-    console.log(`${commentTitle}`,"value")
-    console.log(`${commentTitle}`,"value")
 
     fetch(`${Config.serverapi}/insertBlog`, {
       method: 'post',
@@ -69,22 +65,8 @@ class InsertBlog extends React.Component {
   }
 
   render() {
-    return <>
-
-      {/* <ReactQuill
-        modules={this.modules}
-        theme="snow"
-        value={this.state.contentHTML}
-        onChange={this.onChangeText}
-        style={{heigh:'120px'}}
-      ></ReactQuill> */}
-      {/* <div style={{width:'1000px', display: 'block'}}>
-        <div style={{display: 'flex'}}><label>Title:</label><input></input></div>
-        <div style={{display: 'flex'}}><label>Description:</label><input></input></div>
-        <div style={{display: 'flex'}}><label>Image:</label><input></input></div>
-      </div> */}
-      {/* <div  */}
-      <div style={{width:'700px'}}>
+    return (
+      <div style={{ padding: '70px'}}>
         <div class="form-group row">
           <label htmlFor="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Title</label>
           <div class="col-sm-10">
@@ -94,7 +76,7 @@ class InsertBlog extends React.Component {
         <div class="form-group row">
           <label htmlFor="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Description</label>
           <div class="col-sm-10">
-            <textarea id="description" style={{width:'100%'}}></textarea>
+            <textarea id="description" rows={20} style={{width:'100%'}}></textarea>
           </div>
         </div>
         <div class="form-group row">
@@ -106,8 +88,7 @@ class InsertBlog extends React.Component {
         
         <button className="btn btn-primary" style={{float:"right"}} type="submit"  onClick={this.save}>Save</button>
       </div>
-   
-      </>
+    )
   }
 }
 

@@ -138,37 +138,39 @@ function SinglePost(props) {
 
   const commentNode = Array.isArray(commentContent) ? 
     commentContent.map((comment)=>{
-    return (
-      <div className="CommentLevel top" key={comment.childId} style={{ paddingLeft: comment.padding }}>
-        <div className="Comment">
-          <div className="Avatar" style={{backgroundImage: `url(${comment.avatarUrl})`, borderRadius: '20px', width: '40px', height: '40px'}}>
-          </div>
-          <div className="right">
-            <div className="top">
-              <p> {comment.userName} </p>
+      if (!comment.commentAllow) return
+
+      return (
+        <div className="CommentLevel top" key={comment.childId} style={{ paddingLeft: comment.padding }}>
+          <div className="Comment">
+            <div className="Avatar" style={{backgroundImage: `url(${comment.avatarUrl})`, borderRadius: '20px', width: '40px', height: '40px'}}>
             </div>
-            <div className="message">
-              <p> {comment.content} </p>
-            </div>
-            <div className="bottom">
-              <div className="left">
-                <span className="date desktopOnly">{comment.commentDate}</span>
-                { socialAuth.auth ? 
-                <button className="reply" onClick={() => handleCommentReply(comment._id)}> Reply</button>
-                : null }
+            <div className="right">
+              <div className="top">
+                <p> {comment.userName} </p>
               </div>
+              <div className="message">
+                <p> {comment.content} </p>
+              </div>
+              <div className="bottom">
+                <div className="left">
+                  <span className="date desktopOnly">{comment.commentDate}</span>
+                  { socialAuth.auth ? 
+                  <button className="reply" onClick={() => handleCommentReply(comment._id)}> Reply</button>
+                  : null }
+                </div>
+              </div>
+              { socialAuth.auth ?
+              <div id={comment._id} className="" style={{display:'none', width: '100%'}}>
+                <textarea className="commentTextarea" placeholder="Comment:" ></textarea>
+                <button className="reply" onClick={() => handleCommentPost(comment._id, comment.selfId)}> Post</button>
+                <button className="reply" onClick={() => handleCommentCancel(comment._id)}> Cancel</button>
+              </div>
+              : null }
             </div>
-            { socialAuth.auth ?
-            <div id={comment._id} className="" style={{display:'none', width: '100%'}}>
-              <textarea className="commentTextarea" placeholder="Comment:" ></textarea>
-              <button className="reply" onClick={() => handleCommentPost(comment._id, comment.selfId)}> Post</button>
-              <button className="reply" onClick={() => handleCommentCancel(comment._id)}> Cancel</button>
-            </div>
-            : null }
           </div>
         </div>
-      </div>
-    )
+      )
   }) : null
   
   const commentNew =    
@@ -201,9 +203,9 @@ function SinglePost(props) {
               </div>
               <div className="blog-posts single-post">   
                 <article className="post clearfix mb-0">
-                  <h2 id="basics"> { blogContent ? blogContent[0].commenttitle : null } </h2>
-                  <p><img src={ blogContent ? blogContent[0].commentimage : null } /></p>
-                  <p>{ blogContent ? blogContent[0].commentdescription : null }</p>
+                  <h2 id="basics"> { blogContent ? blogContent[0].blogTitle : null } </h2>
+                  <p><img src={ blogContent ? blogContent[0].blogImage : null } /></p>
+                  <p>{ blogContent ? blogContent[0].blogDescription : null }</p>
                   { !socialAuth.auth ? commentNew : 
                     <div>
                       <div className="cell">

@@ -7,20 +7,14 @@ class AdminPage extends React.Component{
    
     render() {
         return (
-            <div style={{ display: 'flex' }}>
-                <div>
+            <div style={{ display: 'flex'}}>
+                <div style={{ backgroundColor: '#001529', paddingTop: '60px' }}>
                     <Itemlist />
                 </div>
             
-                <div style={{    
-                    paddingTop: '50px',
-                    paddingRight: '50px',
-                    paddingLeft: '140px'
-                }} >
+                <div style={{ width: '100%'}} >
                     <Routeurl />      
-
                 </div>
-
             </div>
         )
     }

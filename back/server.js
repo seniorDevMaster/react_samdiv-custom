@@ -35,11 +35,14 @@ app.use(express.json())
 // Handle Comment
 app.post('/saveComment', blogController.setComment)
 app.post('/getBlogAndComment', blogController.getBlogAndComment)
+app.post('/getCommentListWithBlogName', blogController.getCommentListWithBlogName)
+app.post('/updateCommentAllow', blogController.updateCommentAllow)
 // app.post('/reply', blogController.collectUserComment)
 
 // Handle Admin
-app.get('/bloglist/get', blogController.getBlog)
+app.post('/getBlogList', blogController.getBlogList)
 app.post('/insertBlog', blogController.insertBlog)
+app.post('/updateBlog', blogController.updateBlog)
 
 
 // Catch all to handle all other requests that come into the app.
