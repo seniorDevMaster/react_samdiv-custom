@@ -12,7 +12,7 @@ const fields = {
   blogImage: {
     type: String
   },
-  categories: {
+  blogOtherImage: {
     type: String
   },
   curDate: {

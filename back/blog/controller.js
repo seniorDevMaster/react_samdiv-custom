@@ -90,12 +90,21 @@ exports.getBlogList = (req, res) => {
 exports.insertBlog = (req, res) => {
   const blog = req.body;
 
-  const blogTitle = blog.title;
-  const blogDescription = blog.commentDes;
-  const blogImage = blog.commentImage;
-  const curDate = blog.curDate;
+  const blogTitle = blog.blogTitle;
+  const blogDescription = blog.blogDescription;
+  const blogImage = blog.blogImage;
+  const blogOtherImage = blog.blogOtherImage;
 
-  Blog.create({ blogTitle, blogDescription, blogImage, curDate })
+  let today = new Date().toLocaleDateString(undefined, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  })
+
+  Blog.create({ blogTitle, blogDescription, blogImage, blogOtherImage, curDate: today })
     .then(() => res.json('success'))
     .catch(err => console.log('create err ------------------', err))
 }
@@ -104,7 +113,7 @@ exports.updateBlog = (req, res) => {
   const blog = req.body;
 
   Blog.findByIdAndUpdate({ '_id': blog.updateId },
-    { blogTitle: blog.blogTitle, blogDescription: blog.blogDescription, blogImage: blog.blogImage })
+    { blogTitle: blog.blogTitle, blogDescription: blog.blogDescription, blogImage: blog.blogImage, blogOtherImage: blog.blogOtherImage })
     .then(() => res.json('success'))
     .catch(err => console.log('update err ------------------', err))
 }

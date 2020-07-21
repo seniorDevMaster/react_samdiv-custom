@@ -36,17 +36,11 @@ class InsertBlog extends React.Component {
   }
   save = ()=>{
 
-    let commentTitle = document.getElementById('title').value + "";
-    let commentDes = document.getElementById('description').value;
-    let commentImage = document.getElementById('Image').value;
-    let today = new Date().toLocaleDateString(undefined, {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    })
+    let blogTitle = document.getElementById('title').value + "";
+    let blogDescription = document.getElementById('description').value;
+    let blogImage = document.getElementById('Image').value;
+    let blogOtherImage = document.getElementById('otherImage').value;
+    
     let value = this.state.contentHTML;
 
     fetch(`${Config.serverapi}/insertBlog`, {
@@ -55,7 +49,7 @@ class InsertBlog extends React.Component {
           accept: 'application/json',
           'content-type': 'application/json'
       },
-      body: JSON.stringify({ comment: value, title: commentTitle, commentDes: commentDes, commentImage: commentImage, curDate: today})
+      body: JSON.stringify({ blogTitle, blogDescription, blogImage, blogOtherImage})
     })
     .then(res => {
       if (res.status === 200)
@@ -83,6 +77,12 @@ class InsertBlog extends React.Component {
           <label htmlFor="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Image</label>
           <div class="col-sm-10">
             <input type="input" class="form-control form-control-sm" id="Image" placeholder="" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label htmlFor="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Second Image</label>
+          <div class="col-sm-10">
+            <input type="input" class="form-control form-control-sm" id="otherImage" placeholder="" />
           </div>
         </div>
         

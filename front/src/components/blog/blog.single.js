@@ -188,7 +188,7 @@ function SinglePost(props) {
       <section>
         <div className="container mt-30 mb-30 pt-30 pb-30">
           <div className="row">
-            <div className="col-md-8 col-md-offset-2">
+            <div className="col-md-12">
               <div className="filter">
                 <button className="Button iconButton noPadding">
                   <div className="icon">
@@ -206,6 +206,8 @@ function SinglePost(props) {
                   <h2 id="basics"> { blogContent ? blogContent[0].blogTitle : null } </h2>
                   <p><img src={ blogContent ? blogContent[0].blogImage : null } /></p>
                   <p>{ blogContent ? blogContent[0].blogDescription : null }</p>
+                  <p><img src={ blogContent ? blogContent[0].blogOtherImage : null } /></p>
+
                   { !socialAuth.auth ? commentNew : 
                     <div>
                       <div className="cell">
