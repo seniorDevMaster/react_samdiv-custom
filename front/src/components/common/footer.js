@@ -12,7 +12,7 @@ export default class AppFooter extends Component {
       <div className="col-md-3">
         <div className="widget dark">
         <h4 className="widget-title">About Us</h4>
-          <p className="font-12 mt-20 mb-20">Samdiv Technologies is an independent, Irish based, IT Services and Technology Solutions Company providing cutting-edge cloud-based, AI technology solutions</p>          
+          <p className="font-12 mt-20 mb-20 colorGray">Samdiv Technologies is an independent, Irish based, IT Services and Technology Solutions Company providing cutting-edge cloud-based, AI technology solutions</p>          
         </div>
       </div>
       <div className="col-md-9">
@@ -57,7 +57,7 @@ export default class AppFooter extends Component {
             <div className="widget dark">
               <h4 className="widget-title">Office Address</h4>
               <div className="row clearfix">
-                <div className="col-xs-12 col-sm-12 col-md-12">
+                <div className="col-xs-12 col-sm-12 col-md-12 colorGray">
                   Westmeath Co., Athlone, Westmeath N37 XD73, IE
                   <br/>
                   <strong>Email: </strong> info@samdivtech.com

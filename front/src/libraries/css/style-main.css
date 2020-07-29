@@ -8986,6 +8986,9 @@ footer#footer.fixed-footer {
   right: 0;
   z-index: 1;
 }
+.colorGray {
+  color: #808080;
+}
 @media screen and (max-width: 992px) {
   footer#footer.fixed-footer {
     position: relative;
