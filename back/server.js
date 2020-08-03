@@ -32,6 +32,9 @@ app.use(function(req, res, next) {
 // Allow the app to accept JSON on req.body
 app.use(express.json())
 
+app.use('/', express.static(__dirname + '/public'));
+app.use('/admin', express.static(__dirname + '/public'));
+
 // Handle Comment
 app.post('/saveComment', blogController.setComment)
 app.post('/getBlogAndComment', blogController.getBlogAndComment)
