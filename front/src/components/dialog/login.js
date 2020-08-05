@@ -56,7 +56,7 @@ function Login(props) {
                     </SocialButton>
                     <SocialButton
                         provider='google'
-                        appId='884561969739-juauams1hcaj9vijogkd4ghqei5v13uc.apps.googleusercontent.com'
+                        appId='400406819773-88sm3hggaros94akstpsj9hsu9lg4a2e.apps.googleusercontent.com'
                         onLoginSuccess={handleSocialLogin}
                         onLoginFailure={handleSocialLoginFailure}
                         onLogoutSuccess={handleLogoutSuccess}
