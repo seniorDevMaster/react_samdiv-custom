@@ -37,6 +37,7 @@ function BlogList (props) {
       const blogTitle = document.getElementById(id).childNodes[1].textContent
       const blogDescription = document.getElementById(id).childNodes[2].textContent
       const blogImage = document.getElementById(id).childNodes[3].textContent
+      const blogOtherImage = document.getElementById(id).childNodes[4].textContent
 
       fetch(`${Config.serverapi}/updateBlog`, {
         method: 'post',
@@ -44,7 +45,7 @@ function BlogList (props) {
             accept: 'application/json',
             'content-type': 'application/json'
         },
-        body: JSON.stringify({ updateId: id, blogTitle, blogDescription, blogImage})
+        body: JSON.stringify({ updateId: id, blogTitle, blogDescription, blogImage, blogOtherImage})
       })
       .then(data => {
         alert('Success')
@@ -64,6 +65,7 @@ function BlogList (props) {
                     <td className="col-md-2" contenteditable={`${editStatus}`}>{ blog.blogTitle }</td>
                     <td className="col-md-5" contenteditable={`${editStatus}`}>{ blog.blogDescription }</td>
                     <td className="col-md-3" contenteditable={`${editStatus}`}>{ blog.blogImage }</td>      
+                    <td className="col-md-3" contenteditable={`${editStatus}`}>{ blog.blogOtherImage }</td>      
                     <td className="col-md-1" style={{textAlign: 'center'}} >
                       <button tabindex="0" type="button" className="blogEdit" onClick={()=>{handleEdit(blog._id)}}>
                         <svg viewBox="0 0 24 24">
@@ -86,6 +88,7 @@ function BlogList (props) {
                     <th className="col-md-2">{ 'Title' }</th>
                     <th className="col-md-5">{ 'Description' }</th>
                     <th className="col-md-3">{ 'ImageURL' }</th>      
+                    <th className="col-md-3">{ 'OtherImageURL' }</th>      
                     <th className="col-md-1">{ 'Edit' }</th>      
                 </tr>
                 { list }

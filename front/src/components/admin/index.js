@@ -2,6 +2,8 @@ import React from "react";
 
 import Itemlist from './adminlist';
 import Routeurl from './router';
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 class AdminPage extends React.Component{
     constructor(props) {
@@ -12,6 +14,8 @@ class AdminPage extends React.Component{
         var ownerSec = document.getElementById('ownerInput').value
         if (ownerSec === 'samdivtech') {
             this.setState({ isOwner: true })
+        } else {
+            toast.error('Invalid Password!')
         }
     }
     render() {
@@ -37,6 +41,17 @@ class AdminPage extends React.Component{
                     </div>
                 </div>
                 }
+                <ToastContainer
+                    position="top-right"
+                    autoClose={7000}
+                    hideProgressBar
+                    newestOnTop={false}
+                    closeOnClick={false}
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    draggable={false}
+                    pauseOnHover={true}
+                />
             </div>
         )
     }
