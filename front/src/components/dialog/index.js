@@ -10,8 +10,9 @@ class JwModal extends React.Component {
     static modals = [];
 
     static open = (id) => (e) => {
-        e.preventDefault();
+        // e.preventDefault();
 
+        console.log('Model Open : --------- ', id)
         // open modal specified by id
         let modal = JwModal.modals.find(x => x.props.id === id);
         modal.setState({ isOpen: true });

@@ -8,9 +8,14 @@ import 'react-toastify/dist/ReactToastify.css'
 class AdminPage extends React.Component{
     constructor(props) {
         super(props)
-        this.state = { isOwner: false }
+        this.state = { isOwner: true }
     }
-    handleConfirm = (e) => {
+
+    handleKeyDown = (e) => {
+        if (e.which === 13 || e.keyCode === 13) 
+            this.handleConfirm();
+    }
+    handleConfirm = () => {
         var ownerSec = document.getElementById('ownerInput').value
         if (ownerSec === 'samdivtech') {
             this.setState({ isOwner: true })
@@ -36,7 +41,7 @@ class AdminPage extends React.Component{
                     <div className='ownerConfirmDiv'>
                         <h3>Sign to Admin!</h3>
 
-                        <input type='password' id='ownerInput' />
+                        <input type='password' id='ownerInput' onKeyPress={this.handleKeyDown} autoFocus />
                         <button className='btn btn-primary' onClick={this.handleConfirm} >Confrim</button>
                     </div>
                 </div>
