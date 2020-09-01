@@ -183,7 +183,8 @@ exports.getBlogWithID = (req, res) => {
     const { blogId } = req.body
 
     Blog.findOne({ _id: blogId }, function (err, item) {
-        if (err) console.log("Error in getBlogWithID : ", err)
+        if (err) return console.log("Error in getBlogWithID : ", err)
+        
         res.send(item)
     })
 }

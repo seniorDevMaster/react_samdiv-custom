@@ -33,21 +33,22 @@ FroalaEditor.RegisterCommand("insert", {
 class InsertBlog extends React.Component {
     state = {
         content: "",
-        blogID: localStorage.getItem("blogID"),
+        blogId: localStorage.getItem("blogId"),
     }
 
     componentDidMount() {
         fetch(`${Config.serverapi}/getBlogWithID`, {
             method: "post",
             headers: {
-                accept: "application/json",
+                "accept": "application/json",
                 "content-type": "application/json",
             },
-            body: JSON.stringify({ blogID: this.state.blogID }),
+            body: JSON.stringify({ blogId: this.state.blogId }),
         })
             .then((res) => res.json())
             .then((data) => {
-                if (this.state.blogID) {
+                console.log('-------------',this.state.blogId, data)
+                if (this.state.blogId) {
                     this.setState({ content: data.blogContent })
                 }
             })
@@ -62,12 +63,12 @@ class InsertBlog extends React.Component {
 
     save = () => {
         let value = this.state.content
-        if (this.state.blogID) {
+        if (this.state.blogId) {
             this.fetchFun(`${Config.serverapi}/updateBlog`, {
-                blogId: localStorage.getItem("blogID"),
+                blogId: localStorage.getItem("blogId"),
                 value,
             })
-            localStorage.removeItem("blogID")
+            localStorage.removeItem("blogId")
         } else this.fetchFun(`${Config.serverapi}/insertBlog`, { value })
     }
 

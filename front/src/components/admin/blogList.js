@@ -11,7 +11,7 @@ function BlogList(props) {
         fetch(`${Config.serverapi}/getBlogList`, {
             method: "post",
             headers: {
-                accept: "application/json",
+                "accept": "application/json",
                 "content-type": "application/json",
             },
         })
@@ -23,7 +23,7 @@ function BlogList(props) {
     }, [])
 
     const handleEdit = (id) => {
-        localStorage.setItem('blogID', id)
+        localStorage.setItem('blogId', id)
         window.location.href = '/admin/insertBlog'
     }
 
