@@ -1,68 +1,87 @@
 import React from "react"
 
-// Require Editor JS files.
-import "froala-editor/js/froala_editor.pkgd.min.js"
-import "froala-editor/js/plugins.pkgd.min.js"
-import "froala-editor/js/third_party/embedly.min.js"
-import "froala-editor/js/plugins/fullscreen.min.js"
+import {
+    EditorState,
+    ContentState,
+    convertFromHTML,
+    CompositeDecorator,
+    convertToRaw,
+    getDefaultKeyBinding,
+} from "draft-js"
 
-// Require Editor CSS files.
-import "froala-editor/css/froala_style.min.css"
-import "froala-editor/css/froala_editor.pkgd.min.css"
-import "froala-editor/css/third_party/embedly.min.css"
-import "froala-editor/css/plugins/fullscreen.min.css"
+import { Editor } from "react-draft-wysiwyg"
+import draftToHtml from "draftjs-to-html"
+import htmlToDraft from 'html-to-draftjs';
+import embed from "embed-video"
 
-import FroalaEditorComponent from "react-froala-wysiwyg"
-import FroalaEditor from "froala-editor"
-// import FroalaEditor from 'react-froala-wysiwyg'
-
-import "./admin.css"
 import Config from "../../config.json"
 
-FroalaEditor.DefineIcon("insert", { NAME: "plus", SVG_KEY: "add" })
-FroalaEditor.RegisterCommand("insert", {
-    title: "Insert HTML",
-    focus: true,
-    undo: true,
-    refreshAfterCallback: true,
-    callback: function () {
-        this.html.insert("My New HTML")
-    },
-})
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
+import "./admin.css"
+
+const getHtml = (editorState) =>
+    draftToHtml(convertToRaw(editorState.getCurrentContent()))
+{
+    /* new */
+}
 
 class InsertBlog extends React.Component {
     state = {
-        content: "",
         blogId: localStorage.getItem("blogId"),
+        editorState: EditorState.createEmpty(),
+    }
+
+    onEditorStateChange = (editorState) => {
+        this.setState({
+            editorState,
+        })
     }
 
     componentDidMount() {
         fetch(`${Config.serverapi}/getBlogWithID`, {
             method: "post",
             headers: {
-                "accept": "application/json",
+                accept: "application/json",
                 "content-type": "application/json",
             },
             body: JSON.stringify({ blogId: this.state.blogId }),
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('-------------',this.state.blogId, data)
                 if (this.state.blogId) {
-                    this.setState({ content: data.blogContent })
+                    const contentBlock = htmlToDraft(data.blogContent);
+                    if (contentBlock) {
+                        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+                        const editorState = EditorState.createWithContent(contentState);
+                        this.setState({editorState: editorState})
+                    }
                 }
             })
             .catch((err) => console.log(err))
     }
 
-    handleModelChange = (model) => {
-        this.setState({
-            content: model,
+    uploadImageCallBack = (file) => {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest() // eslint-disable-line no-undef
+            xhr.open("POST", "https://api.imgur.com/3/image")
+            xhr.setRequestHeader("Authorization", "Client-ID 8d26ccd12712fca")
+            const data = new FormData() // eslint-disable-line no-undef
+            data.append("image", file)
+            xhr.send(data)
+            xhr.addEventListener("load", () => {
+                const response = JSON.parse(xhr.responseText)
+                resolve(response)
+            })
+            xhr.addEventListener("error", () => {
+                const error = JSON.parse(xhr.responseText)
+                reject(error)
+            })
         })
     }
 
     save = () => {
-        let value = this.state.content
+        let value = getHtml(this.state.editorState)
+
         if (this.state.blogId) {
             this.fetchFun(`${Config.serverapi}/updateBlog`, {
                 blogId: localStorage.getItem("blogId"),
@@ -87,6 +106,8 @@ class InsertBlog extends React.Component {
             .catch((err) => console.log(err))
     }
     render() {
+        const { editorState } = this.state
+
         return (
             <div style={{ padding: "70px" }}>
                 <div className="sample">
@@ -101,71 +122,36 @@ class InsertBlog extends React.Component {
                             Save
                         </button>
                     </div>
-
-                    <FroalaEditorComponent
-                        model={this.state.content}
-                        onModelChange={this.handleModelChange}
-                        config={{
-                            //toolbarButtons: ["bold", "insert"],
-                            pluginsEnabled: [
-                                "table",
-                                "spell",
-                                "quote",
-                                "save",
-                                "fontFamily",
-                                "fontSize",
-                                "quickInsert",
-                                "paragraphFormat",
-                                "paragraphStyle",
-                                "help",
-                                "draggable",
-                                "align",
-                                "link",
-                                "lists",
-                                "file",
-                                "image",
-                                "emoticons",
-                                "url",
-                                "video",
-                                "embedly",
-                                "colors",
-                                "entities",
-                                "inlineClass",
-                                "inlineStyle",
-                                "codeBeautif ",
-                                "spellChecker",
-                                "imageTUI",
-                            ],
-                            events: {
-                                initialized: function() {
+                    <Editor
+                        editorState={editorState}
+                        wrapperClassName="rich-editor demo-wrapper"
+                        editorClassName="demo-editor"
+                        onEditorStateChange={this.onEditorStateChange}
+                        placeholder="The message goes here..."
+                        toolbar={{
+                            link: {
+                                linkCallback: (params) => ({ ...params }),
+                            },
+                            embedded: {
+                                embedCallback: (link) => {
+                                    const detectedSrc = /<iframe.*? src="(.*?)"/.exec(
+                                        embed(link)
+                                    )
+                                    return (
+                                        (detectedSrc && detectedSrc[1]) || link
+                                    )
                                 },
-                                "image.beforeUpload": function (files) {
-                                    var editor = this
-                                    if (files.length) {
-                                        // Create a File Reader.
-                                        var reader = new FileReader()
-                                        // Set the reader to insert images when they are loaded.
-                                        reader.onload = function (e) {
-                                            var result = e.target.result
-                                            editor.image.insert(
-                                                result,
-                                                null,
-                                                null,
-                                                editor.image.get()
-                                            )
-                                        }
-
-                                        // Read image as base64.
-                                        reader.readAsDataURL(files[0])
-                                    }
-                                    editor.popups.hideAll()
-                                    // Stop default upload chain.
-                                    return false
-                                },
-                            }
+                            },
+                            image: {
+                                uploadCallback: this.uploadImageCallBack,
+                                alt: { present: true, mandatory: true },
+                                inputAccept:
+                                    "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                                previewImage: true,
+                            },
                         }}
-                        tag="textarea"
                     />
+                    {/* <div className="html-view"> {getHtml(editorState)} </div> */}
                 </div>
             </div>
         )
