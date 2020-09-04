@@ -37,7 +37,6 @@ function Confirm(props) {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('data : ----------- ', data)
                 setUserData(data)
             })
             .catch((err) => console.log(err))

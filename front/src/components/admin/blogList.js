@@ -8,18 +8,7 @@ function BlogList(props) {
     const [blogContent, setBlogContent] = useState()
 
     useEffect(() => {
-        fetch(`${Config.serverapi}/getBlogList`, {
-            method: "post",
-            headers: {
-                "accept": "application/json",
-                "content-type": "application/json",
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setBlogContent(data)
-            })
-            .catch((err) => console.log(err))
+        getAndSetServerData(`${Config.serverapi}/getBlogList`)
     }, [])
 
     const handleEdit = (id) => {
@@ -27,6 +16,27 @@ function BlogList(props) {
         window.location.href = '/admin/insertBlog'
     }
 
+    const handleDelete = (id) => {
+        getAndSetServerData(`${Config.serverapi}/deleteBlogWithID`, {deleteId: id})
+        alert('Success')
+    }
+
+    function getAndSetServerData(url, value) {
+        fetch(url, {
+            method: "post",
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json",
+            },
+            body: JSON.stringify(value),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                // console.log('data : ', data)
+                setBlogContent(data)
+            })
+            .catch((err) => console.log(err))
+    }
     let list = Array.isArray(blogContent)
         ? blogContent.map((blog, key) => {
             return (
@@ -38,7 +48,16 @@ function BlogList(props) {
                         {blog.blogTitle}
                     </td>
                     <td className="col-md-3 txt-center" style={{ textAlign: "center" }}>
-                        <button
+                        <button type="button" className="blogEdit" onClick={()=>{handleEdit(blog._id)}}>
+                            <svg viewBox="0 0 24 24">
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
+                            </svg>
+                        </button>
+                        <button type="button" className="blogEdit" onClick={()=>{handleDelete(blog._id)}}>
+                            <img style={{ width: '60%',height: '60%'}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTzmtlwwSabkCH7Dx0TmKXA6y5wSbvs9ITmTQ&usqp=CAU" />
+                        </button>
+
+                        {/* <button
                             type="button"
                             className="blogEdit"
                             onClick={() => {
@@ -48,7 +67,7 @@ function BlogList(props) {
                             <svg viewBox="0 0 24 24">
                                 <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
                             </svg>
-                        </button>
+                        </button> */}
                     </td>
                 </tr>
             )

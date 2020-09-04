@@ -46,6 +46,9 @@
   line-height: 40px;
   outline: none;
 }
+.blogEdit image {
+  outline: none;
+}
 #customers td, #customers th {
   border: 1px solid #ddd;
   word-break: break-word;
