@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 class AdminPage extends React.Component{
     constructor(props) {
         super(props)
-        this.state = { isOwner: true }
+        this.state = { isOwner: false }
     }
 
     handleKeyDown = (e) => {
