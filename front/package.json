@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "antd": "^4.4.0",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "bootstrap": "^3.4.1",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
